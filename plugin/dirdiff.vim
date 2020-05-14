@@ -471,34 +471,20 @@ function! <SID>DirDiffOpen()
         exe (b:currentDiff)
         let s:LastMode = fileSrc
     elseif <SID>IsDiffer(line)
+        "Open the diff windows
+        silent exec "split ".s:FilenameB
+
+        " To ensure that A is on the left and B on the right, splitright must be off
+        silent exec "leftabove vert diffsplit ".s:FilenameA
 
         if exists("s:LastMode")
             if s:LastMode == 2
-                silent exec "drop ".previousFileA
-                silent exec "edit ".s:FilenameA
-                diffthis
                 silent exec "bd ".bufnr(previousFileA)
-
-                silent exec "drop ".previousFileB
-                silent exec "edit ".s:FilenameB
-                diffthis
                 silent exec "bd ".bufnr(previousFileB)
             else
                 let previousFile = (s:LastMode == "A") ? previousFileA : previousFileB
-                silent exec "drop ".previousFile
-                silent exec "edit ".s:FilenameB
                 silent exec "bd ".bufnr(previousFile)
-                diffthis
-
-                " To ensure that A is on the left and B on the right, splitright must be off
-                silent exec "leftabove vert diffsplit ".s:FilenameA
             endif
-        else
-            "Open the diff windows
-            silent exec "split ".s:FilenameB
-
-            " To ensure that A is on the left and B on the right, splitright must be off
-            silent exec "leftabove vert diffsplit ".s:FilenameA
         endif
 
         " Go back to the diff window
