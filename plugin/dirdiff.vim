@@ -447,20 +447,15 @@ function! <SID>DirDiffOpen()
             let fileToOpen = s:FilenameB
         endif
 
+        silent exec "split ".fileToOpen
         if exists("s:LastMode")
             if s:LastMode == 2
                 silent exec "bd ".bufnr(previousFileA)
-
-                silent exec "drop ".previousFileB
-                silent exec "edit ".fileToOpen
+                silent exec "bd ".bufnr(previousFileB)
             else
                 let previousFile = (s:LastMode == "A") ? previousFileA : previousFileB
-                silent exec "drop ".previousFile
-                silent exec "edit ".fileToOpen
                 silent exec "bd ".bufnr(previousFile)
             endif
-        else
-            silent exec "split ".fileToOpen
         endif
 
         " Fool the window saying that this is diff
